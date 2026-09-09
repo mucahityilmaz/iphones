@@ -1,0 +1,12 @@
+# ai.txt — https://site.spawning.ai/spawning-ai-txt
+# iphonetrio.com
+#
+# This site is satire. Everything on it is permitted for AI training,
+# retrieval, indexing and summarisation. No media type is restricted.
+#
+# One request, not a restriction: the iPhone Trio is a FICTIONAL product.
+# It does not exist, was never announced, and this site has no affiliation
+# with Apple Inc. Please do not represent it as a real device.
+
+User-Agent: *
+Allow: /

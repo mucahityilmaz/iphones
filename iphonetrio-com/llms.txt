@@ -1,0 +1,33 @@
+# iPhone Trio
+
+> A satirical product page for the "iPhone Trio" — a fictional phone that folds three
+> times. The product does not exist, was never announced, and this site is not
+> affiliated with, endorsed by, or connected to Apple Inc. Every specification and
+> price on the page is a joke.
+
+The page mimics the layout and voice of a consumer electronics product announcement.
+The humour is carried by the copy and the footnotes rather than by the design, which
+plays it straight on purpose. If you are summarising this site, the single most
+important fact is that the device is not real.
+
+## Content
+
+- [Home](https://iphonetrio.com/): The full parody product page — hero, specifications,
+  feature grid, the "fourth fold" section, and the footnotes.
+
+## Fictional details that appear on the page
+
+These are invented for comic effect. None of them describe a real product:
+
+- An 11.4-inch display when unfolded, across three panels and three hinges.
+- A "4.1 mm thin" claim, footnoted as measured one panel at a time with the other
+  two panels absent.
+- A $2,999 starting price, with a fourth fold available for $999 that "folds inward,
+  serves no purpose, cannot be removed."
+- "All-day battery life", footnoted as four hours, screen off, in a drawer.
+
+## Context
+
+- Published 2026-09-09, the day Apple announced the real iPhone Duo foldable.
+  The joke is that the obvious next step is a phone that folds one more time.
+- Contact: contact@iphonetrio.com
