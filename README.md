@@ -10,8 +10,8 @@ Static sites for three domains, hosted on Cloudflare Pages (free tier).
 | `iphoneduo-click/` | [iphoneduo.click](https://iphoneduo.click) | `iphoneduo-click` |
 | `iphonetrio-com/` | [iphonetrio.com](https://iphonetrio.com) | `iphonetrio-com` |
 
-Each folder is an independent static site with its own Pages project. Currently a
-placeholder `index.html` in each — content is built per-site, separately.
+Each folder is an independent static site with its own Pages project. `iphonetrio-com`
+is the iPhone Trio parody page; the other two are still placeholders.
 
 ## Cloudflare setup
 

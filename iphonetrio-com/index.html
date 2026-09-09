@@ -3,6 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Resolve theme before first paint so there is no flash of the wrong one. -->
+<script>
+  (function () {
+    try {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  })();
+</script>
 <!-- Google tag (gtag.js) with basic consent mode -->
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -58,28 +67,69 @@
 <meta property="og:url" content="https://iphonetrio.com/">
 <meta property="og:title" content="iPhone Trio — Three screens. One iPhone.">
 <meta property="og:description" content="It folds three times. The fourth fold is a $200 option. A parody.">
-<meta property="og:image" content="https://iphonetrio.com/img/og.png">
+<meta property="og:image" content="https://iphonetrio.com/img/og.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="iPhone Trio — Three screens. One iPhone.">
 <meta name="twitter:description" content="It folds three times. The fourth fold is a $200 option. A parody.">
-<meta name="twitter:image" content="https://iphonetrio.com/img/og.png">
+<meta name="twitter:image" content="https://iphonetrio.com/img/og.jpg">
 <style>
+  /* ---------- tokens: light ---------- */
   :root {
+    color-scheme: light;
+    --bg: #ffffff;
+    --bg-alt: #f5f5f7;
     --ink: #1d1d1f;
     --sub: #6e6e73;
-    --grey: #f5f5f7;
-    --shot: #eaeaea;  /* matches the product-render backgrounds */
     --line: rgba(0,0,0,.12);
+    --nav-bg: rgba(255,255,255,.82);
+    --band-bg: #000000;
+    --band-ink: #f5f5f7;
+    --band-sub: #a1a1a6;
     --blue: #0066cc;
+    /* Product-shot surfaces stay light in both themes: the crops are dark
+       phones on #eaeaea, which would disappear on a dark card. */
+    --shot: #eaeaea;
+    --shot-ink: #1d1d1f;
+    --shot-sub: #6e6e73;
     --shell: 980px;
   }
+  /* ---------- tokens: dark ---------- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #000000;
+      --bg-alt: #0b0b0c;
+      --ink: #f5f5f7;
+      --sub: #86868b;
+      --line: rgba(255,255,255,.16);
+      --nav-bg: rgba(0,0,0,.72);
+      --band-bg: #1d1d1f;
+      --band-ink: #f5f5f7;
+      --band-sub: #a1a1a6;
+      --blue: #2997ff;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #000000;
+    --bg-alt: #0b0b0c;
+    --ink: #f5f5f7;
+    --sub: #86868b;
+    --line: rgba(255,255,255,.16);
+    --nav-bg: rgba(0,0,0,.72);
+    --band-bg: #1d1d1f;
+    --band-ink: #f5f5f7;
+    --band-sub: #a1a1a6;
+    --blue: #2997ff;
+  }
+
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
     margin: 0;
-    background: #fff;
+    background: var(--bg);
     color: var(--ink);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
                  "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -89,11 +139,12 @@
   }
   img { max-width: 100%; display: block; }
   .shell { max-width: var(--shell); margin: 0 auto; padding: 0 22px; }
+  a { color: var(--blue); }
 
   /* ---------- nav ---------- */
   nav {
     position: sticky; top: 0; z-index: 20;
-    background: rgba(255,255,255,.82);
+    background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-bottom: 1px solid var(--line);
@@ -108,9 +159,24 @@
   nav .spacer { flex: 1; }
   nav a { color: var(--sub); text-decoration: none; }
   nav a:hover { color: var(--ink); }
+  .theme-toggle {
+    display: grid; place-items: center;
+    width: 30px; height: 30px; padding: 0;
+    background: none; border: 0; border-radius: 50%;
+    color: var(--sub); cursor: pointer;
+  }
+  .theme-toggle:hover { color: var(--ink); background: var(--line); }
+  .theme-toggle svg { width: 16px; height: 16px; fill: currentColor; }
+  .theme-toggle .moon { display: none; }
+  :root[data-theme="dark"] .theme-toggle .moon { display: block; }
+  :root[data-theme="dark"] .theme-toggle .sun { display: none; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-toggle .moon { display: block; }
+    :root:not([data-theme="light"]) .theme-toggle .sun { display: none; }
+  }
 
   /* ---------- hero ---------- */
-  .hero { text-align: center; padding: 4.5rem 0 0; background: var(--shot); }
+  .hero { text-align: center; padding: 4.5rem 0 0; background: var(--bg-alt); overflow: hidden; }
   .eyebrow { color: var(--sub); font-size: 1.0625rem; margin: 0 0 .35rem; }
   h1 {
     font-size: clamp(3rem, 9vw, 5.5rem);
@@ -121,17 +187,13 @@
     font-size: clamp(1.375rem, 3.4vw, 2rem);
     font-weight: 600; letter-spacing: -.015em; margin: 0 0 .25rem;
   }
-  .kicker { color: var(--sub); font-size: 1.0625rem; margin: 0 0 2.25rem; }
+  .kicker { color: var(--sub); font-size: 1.0625rem; margin: 0 0 2rem; }
   .hero figure { margin: 0; }
-  .hero img { margin: 0 auto; max-width: 960px; width: 100%; }
-  .hero-note {
-    max-width: var(--shell); margin: -1.5rem auto 0; padding: 0 22px 4rem;
-    text-align: right; color: var(--sub);
-    font-size: clamp(1.0625rem, 2vw, 1.5rem); line-height: 1.3;
-  }
+  /* The hands bleed off the bottom of the shot, so sit it flush on the edge. */
+  .hero img { margin: 0 auto; max-width: 1024px; width: 100%; margin-bottom: -4px; }
 
   /* ---------- spec band ---------- */
-  .specs { background: #000; color: #f5f5f7; padding: 4rem 0; }
+  .specs { background: var(--band-bg); color: var(--band-ink); padding: 4rem 0; }
   .specs ul {
     list-style: none; margin: 0; padding: 0;
     display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5rem 1rem;
@@ -141,50 +203,53 @@
     display: block; font-size: clamp(1.75rem, 4.5vw, 2.75rem);
     font-weight: 600; letter-spacing: -.02em; line-height: 1.1;
   }
-  .specs .l { display: block; margin-top: .35rem; color: #a1a1a6; font-size: .875rem; }
+  .specs .l { display: block; margin-top: .35rem; color: var(--band-sub); font-size: .875rem; }
 
   /* ---------- features ---------- */
-  .features { padding: 5rem 0; background: #fff; }
+  .features { padding: 5rem 0; background: var(--bg); }
   .features h2 {
     font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600;
     letter-spacing: -.02em; text-align: center; margin: 0 0 3rem;
   }
   .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
   .card {
-    background: var(--shot); border-radius: 18px; padding: 1.5rem 1.25rem 1.5rem;
+    background: var(--shot); border-radius: 18px; padding: 1.5rem 1.25rem;
     display: flex; flex-direction: column;
   }
-  .card .shot {
-    height: 190px; display: grid; place-items: center; margin-bottom: 1.5rem;
-  }
+  .card .shot { height: 190px; display: grid; place-items: center; margin-bottom: 1.5rem; }
   .card .shot img { max-height: 190px; width: auto; }
-  .card h3 { font-size: 1.0625rem; font-weight: 600; letter-spacing: -.01em; margin: 0 0 .3rem; }
-  .card p { margin: 0; color: var(--sub); font-size: .875rem; }
+  .card h3 {
+    font-size: 1.0625rem; font-weight: 600; letter-spacing: -.01em;
+    margin: 0 0 .3rem; color: var(--shot-ink);
+  }
+  .card p { margin: 0; color: var(--shot-sub); font-size: .875rem; }
 
   /* ---------- fourth fold ---------- */
-  .fourth { background: #000; color: #f5f5f7; text-align: center; padding: 6rem 0; }
+  .fourth { background: var(--band-bg); color: var(--band-ink); text-align: center; padding: 6rem 0; }
   .fourth h2 {
     font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 600;
     letter-spacing: -.025em; margin: 0 0 1rem;
   }
   .fourth p {
-    max-width: 34ch; margin: 0 auto; color: #a1a1a6;
+    max-width: 34ch; margin: 0 auto; color: var(--band-sub);
     font-size: clamp(1.0625rem, 2vw, 1.375rem); line-height: 1.4;
   }
-  .fourth .price { color: #f5f5f7; }
+  .fourth .price { color: var(--band-ink); }
 
   /* ---------- footnotes + footer ---------- */
-  .fine { background: var(--grey); padding: 3rem 0; }
+  .fine { background: var(--bg-alt); padding: 3rem 0; }
   .fine ol { margin: 0; padding-left: 1.1rem; color: var(--sub); font-size: .75rem; line-height: 1.6; }
   .fine li { margin-bottom: .4rem; }
 
-  footer { background: var(--grey); border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; }
-  .disclaimer {
-    color: var(--sub); font-size: .75rem; line-height: 1.6; margin: 0 0 1rem; max-width: 70ch;
-  }
+  footer { background: var(--bg-alt); border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; }
+  .disclaimer { color: var(--sub); font-size: .75rem; line-height: 1.6; margin: 0 0 1.25rem; max-width: 70ch; }
   .disclaimer strong { color: var(--ink); }
-  .footer-row { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center;
-    font-size: .75rem; color: var(--sub); }
+  .footer-row {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; align-items: center;
+    font-size: .8125rem; color: var(--sub);
+  }
+  .footer-row a { text-decoration: none; }
+  .footer-row a:hover { text-decoration: underline; }
 
   /* ---------- reveal ---------- */
   .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
@@ -200,7 +265,7 @@
     display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
     align-items: center; justify-content: center;
     padding: 1rem 1.25rem;
-    background: rgba(255,255,255,.92);
+    background: var(--nav-bg);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-top: 1px solid var(--line);
@@ -229,7 +294,6 @@
   @media (max-width: 860px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
     .specs ul { grid-template-columns: repeat(2, 1fr); }
-    .hero-note { text-align: center; margin-top: 0; }
   }
   @media (max-width: 480px) {
     .grid { grid-template-columns: 1fr; }
@@ -246,6 +310,10 @@
     <span class="badge">Parody</span>
     <span class="spacer"></span>
     <a href="#fine">The fine print</a>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-14a1 1 0 0 1 1 1v1.5a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v1.5a1 1 0 0 1-2 0V20a1 1 0 0 1 1-1zM3 12a1 1 0 0 1 1-1h1.5a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm15.5 0a1 1 0 0 1 1-1H21a1 1 0 0 1 0 2h-1.5a1 1 0 0 1-1-1zM5.6 5.6a1 1 0 0 1 1.4 0l1 1a1 1 0 0 1-1.4 1.4l-1-1a1 1 0 0 1 0-1.4zm10.4 10.4a1 1 0 0 1 1.4 0l1 1a1 1 0 0 1-1.4 1.4l-1-1a1 1 0 0 1 0-1.4zm2.4-10.4a1 1 0 0 1 0 1.4l-1 1A1 1 0 0 1 16 6.6l1-1a1 1 0 0 1 1.4 0zM8 16a1 1 0 0 1 0 1.4l-1 1a1 1 0 0 1-1.4-1.4l1-1a1 1 0 0 1 1.4 0z"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2z"/></svg>
+    </button>
   </div>
 </nav>
 
@@ -257,10 +325,9 @@
     <p class="kicker">Because two folds was clearly not enough.</p>
   </div>
   <figure>
-    <img src="img/trio-open.webp" width="1029" height="789"
-         alt="Concept render of a phone with three display panels unfolded side by side">
+    <img src="img/hero-hands.webp" width="1024" height="678" fetchpriority="high"
+         alt="Two hands holding a phone with three display panels unfolded, showing a home screen, maps and widgets across all three">
   </figure>
-  <p class="hero-note">More space<br>for more of the same.</p>
 </header>
 
 <section class="specs">
@@ -334,6 +401,7 @@
     </p>
     <div class="footer-row">
       <span>iphonetrio.com</span>
+      <a href="mailto:contact@iphonetrio.com">contact@iphonetrio.com</a>
       <span>Three screens. Still no pocket.</span>
     </div>
   </div>
@@ -350,6 +418,17 @@
 
 <script>
   (function () {
+    // ---- theme toggle ----
+    var root = document.documentElement;
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var current = root.getAttribute('data-theme') || (prefersDark ? 'dark' : 'light');
+      var next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('theme', next); } catch (e) {}
+    });
+
+    // ---- consent banner ----
     var banner = document.getElementById('consent-banner');
     var reset = document.getElementById('consent-reset');
 
@@ -366,7 +445,7 @@
     });
     reset.addEventListener('click', showBanner);
 
-    // scroll reveal
+    // ---- scroll reveal ----
     var items = document.querySelectorAll('.reveal');
     if (!('IntersectionObserver' in window)) {
       items.forEach(function (el) { el.classList.add('in'); });
