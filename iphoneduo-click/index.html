@@ -3,19 +3,117 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Google tag (gtag.js) with basic consent mode -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+
+  var GA_ID = 'G-XXZHNPFKG2';
+  var CONSENT_KEY = 'consent-v1';
+
+  // Deny everything by default, before any Google tag loads.
+  gtag('consent', 'default', {
+    'ad_user_data': 'denied',
+    'ad_personalization': 'denied',
+    'ad_storage': 'denied',
+    'analytics_storage': 'denied',
+    'wait_for_update': 500
+  });
+
+  gtag('js', new Date());
+  gtag('config', GA_ID);
+
+  // In basic consent mode gtag.js is only fetched once consent is granted.
+  function loadGtagScript() {
+    if (document.getElementById('gtag-js')) return;
+    var s = document.createElement('script');
+    s.id = 'gtag-js';
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+  }
+
+  function grantConsent() {
+    gtag('consent', 'update', {
+      'ad_user_data': 'granted',
+      'ad_personalization': 'granted',
+      'ad_storage': 'granted',
+      'analytics_storage': 'granted'
+    });
+    loadGtagScript();
+  }
+
+  function readConsent() {
+    try { return localStorage.getItem(CONSENT_KEY); } catch (e) { return null; }
+  }
+  function writeConsent(value) {
+    try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
+  }
+
+  // Returning visitor who already accepted: restore immediately, no banner.
+  if (readConsent() === 'granted') grantConsent();
+</script>
 <title>iphoneduo.click</title>
 <style>
-  :root { color-scheme: light dark; }
+  :root {
+    color-scheme: light dark;
+    --bg: #fff;
+    --fg: #111;
+    --muted: rgba(17, 17, 17, .6);
+    --panel: #f4f4f5;
+    --border: rgba(17, 17, 17, .12);
+    --accent: #111;
+    --accent-fg: #fff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111;
+      --fg: #eee;
+      --muted: rgba(238, 238, 238, .6);
+      --panel: #1c1c1e;
+      --border: rgba(238, 238, 238, .14);
+      --accent: #eee;
+      --accent-fg: #111;
+    }
+  }
   body {
     margin: 0; min-height: 100vh;
     display: grid; place-items: center;
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    background: #fff; color: #111;
+    background: var(--bg); color: var(--fg);
   }
-  @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } }
   h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 .5rem; letter-spacing: -.02em; }
-  p { margin: 0; opacity: .6; font-size: .875rem; }
   main { text-align: center; padding: 2rem; }
+  main p { margin: 0; color: var(--muted); font-size: .875rem; }
+
+  .consent {
+    position: fixed; inset: auto 0 0 0; z-index: 10;
+    display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
+    align-items: center; justify-content: center;
+    padding: 1rem 1.25rem;
+    background: var(--panel);
+    border-top: 1px solid var(--border);
+  }
+  /* Must outrank the .consent display:flex above, or [hidden] has no effect. */
+  .consent[hidden] { display: none; }
+  .consent p { margin: 0; font-size: .8125rem; color: var(--muted); max-width: 46ch; }
+  .consent-actions { display: flex; gap: .5rem; }
+  .consent button {
+    font: inherit; font-size: .8125rem; font-weight: 500;
+    padding: .45rem 1rem; border-radius: 999px;
+    border: 1px solid var(--border); cursor: pointer;
+    background: transparent; color: var(--fg);
+  }
+  .consent button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .consent button:hover { opacity: .85; }
+  .consent button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+
+  .reset {
+    position: fixed; inset: auto .75rem .75rem auto;
+    font-size: .75rem; color: var(--muted);
+    background: none; border: 0; cursor: pointer; font-family: inherit;
+  }
+  .reset:hover { color: var(--fg); }
 </style>
 </head>
 <body>
@@ -23,5 +121,41 @@
     <h1>iphoneduo.click</h1>
     <p>Hello world.</p>
   </main>
+
+  <div class="consent" id="consent-banner" role="dialog" aria-label="Cookie consent" hidden>
+    <p>We use analytics cookies to understand how this site is used. Nothing is collected unless you agree.</p>
+    <div class="consent-actions">
+      <button type="button" id="consent-decline">Decline</button>
+      <button type="button" id="consent-accept" class="primary">Accept</button>
+    </div>
+  </div>
+
+  <button type="button" class="reset" id="consent-reset" hidden>Cookie settings</button>
+
+  <script>
+    (function () {
+      var banner = document.getElementById('consent-banner');
+      var reset = document.getElementById('consent-reset');
+      var choice = readConsent();
+
+      function showBanner() { banner.hidden = false; reset.hidden = true; }
+      function hideBanner() { banner.hidden = true; reset.hidden = false; }
+
+      if (choice) { hideBanner(); } else { showBanner(); }
+
+      document.getElementById('consent-accept').addEventListener('click', function () {
+        writeConsent('granted');
+        grantConsent();
+        hideBanner();
+      });
+
+      document.getElementById('consent-decline').addEventListener('click', function () {
+        writeConsent('denied');
+        hideBanner();
+      });
+
+      reset.addEventListener('click', showBanner);
+    })();
+  </script>
 </body>
 </html>
