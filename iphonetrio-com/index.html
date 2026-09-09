@@ -88,8 +88,8 @@
     --band-ink: #f5f5f7;
     --band-sub: #a1a1a6;
     --blue: #0066cc;
-    /* Product-shot surfaces stay light in both themes: the crops are dark
-       phones on #eaeaea, which would disappear on a dark card. */
+    /* Card surface for the product shots. The crops have transparent
+       backgrounds, so this follows the theme. */
     --shot: #eaeaea;
     --shot-ink: #1d1d1f;
     --shot-sub: #6e6e73;
@@ -109,6 +109,9 @@
       --band-ink: #f5f5f7;
       --band-sub: #a1a1a6;
       --blue: #2997ff;
+      --shot: #1c1c1e;
+      --shot-ink: #f5f5f7;
+      --shot-sub: #a1a1a6;
     }
   }
   :root[data-theme="dark"] {
@@ -123,6 +126,9 @@
     --band-ink: #f5f5f7;
     --band-sub: #a1a1a6;
     --blue: #2997ff;
+    --shot: #1c1c1e;
+    --shot-ink: #f5f5f7;
+    --shot-sub: #a1a1a6;
   }
 
   * { box-sizing: border-box; }
@@ -192,7 +198,7 @@
   .kicker { color: var(--sub); font-size: 1.0625rem; margin: 0 0 2rem; }
   .hero figure { margin: 0; }
   /* The hands bleed off the bottom of the shot, so sit it flush on the edge. */
-  .hero img { margin: 0 auto; max-width: 1024px; width: 100%; margin-bottom: -4px; }
+  .hero img { margin: 0 auto; max-width: 1256px; width: 100%; margin-bottom: -4px; }
 
   /* ---------- spec band ---------- */
   .specs { background: var(--band-bg); color: var(--band-ink); padding: 4rem 0; }
@@ -246,7 +252,8 @@
   footer { background: var(--bg-alt); border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; }
   .disclaimer {
     color: var(--sub); font-size: .75rem; line-height: 1.6;
-    margin: 0 auto 1.25rem; max-width: 70ch; text-align: center;
+    margin: 0 auto 1.25rem; max-width: 82ch; text-align: center;
+    text-wrap: pretty;  /* avoids a single-word last line */
   }
   .disclaimer strong { color: var(--ink); }
   .footer-row {
@@ -313,7 +320,6 @@
     <span class="wordmark">iPhone Trio</span>
     <span class="badge">Parody</span>
     <span class="spacer"></span>
-    <a href="#fine">The fine print</a>
     <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch between light and dark">
       <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-14a1 1 0 0 1 1 1v1.5a1 1 0 0 1-2 0V4a1 1 0 0 1 1-1zm0 16a1 1 0 0 1 1 1v1.5a1 1 0 0 1-2 0V20a1 1 0 0 1 1-1zM3 12a1 1 0 0 1 1-1h1.5a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1zm15.5 0a1 1 0 0 1 1-1H21a1 1 0 0 1 0 2h-1.5a1 1 0 0 1-1-1zM5.6 5.6a1 1 0 0 1 1.4 0l1 1a1 1 0 0 1-1.4 1.4l-1-1a1 1 0 0 1 0-1.4zm10.4 10.4a1 1 0 0 1 1.4 0l1 1a1 1 0 0 1-1.4 1.4l-1-1a1 1 0 0 1 0-1.4zm2.4-10.4a1 1 0 0 1 0 1.4l-1 1A1 1 0 0 1 16 6.6l1-1a1 1 0 0 1 1.4 0zM8 16a1 1 0 0 1 0 1.4l-1 1a1 1 0 0 1-1.4-1.4l1-1a1 1 0 0 1 1.4 0z"/></svg>
       <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13.2A9 9 0 1 1 10.8 3a7 7 0 0 0 10.2 10.2z"/></svg>
@@ -329,7 +335,7 @@
     <p class="kicker">Because two folds was clearly not enough.</p>
   </div>
   <figure>
-    <img src="img/hero-hands.webp" width="1024" height="678" fetchpriority="high"
+    <img src="img/hero-hands.webp" width="1256" height="832" fetchpriority="high"
          alt="Two hands holding a phone with three display panels unfolded, showing a home screen, maps and widgets across all three">
   </figure>
 </header>
