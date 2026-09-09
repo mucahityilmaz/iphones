@@ -94,6 +94,8 @@
     background: var(--panel);
     border-top: 1px solid var(--border);
   }
+  /* Must outrank the .consent display:flex above, or [hidden] has no effect. */
+  .consent[hidden] { display: none; }
   .consent p { margin: 0; font-size: .8125rem; color: var(--muted); max-width: 46ch; }
   .consent-actions { display: flex; gap: .5rem; }
   .consent button {
