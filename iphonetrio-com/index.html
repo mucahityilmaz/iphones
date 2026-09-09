@@ -50,112 +50,335 @@
     try { localStorage.setItem(CONSENT_KEY, value); } catch (e) {}
   }
 
-  // Returning visitor who already accepted: restore immediately, no banner.
   if (readConsent() === 'granted') grantConsent();
 </script>
-<title>iphonetrio.com</title>
+<title>iPhone Trio — Three screens. One iPhone.</title>
+<meta name="description" content="It folds three times. A parody of a phone that does not exist.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://iphonetrio.com/">
+<meta property="og:title" content="iPhone Trio — Three screens. One iPhone.">
+<meta property="og:description" content="It folds three times. The fourth fold is a $200 option. A parody.">
+<meta property="og:image" content="https://iphonetrio.com/img/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="iPhone Trio — Three screens. One iPhone.">
+<meta name="twitter:description" content="It folds three times. The fourth fold is a $200 option. A parody.">
+<meta name="twitter:image" content="https://iphonetrio.com/img/og.png">
 <style>
   :root {
-    color-scheme: light dark;
-    --bg: #fff;
-    --fg: #111;
-    --muted: rgba(17, 17, 17, .6);
-    --panel: #f4f4f5;
-    --border: rgba(17, 17, 17, .12);
-    --accent: #111;
-    --accent-fg: #fff;
+    --ink: #1d1d1f;
+    --sub: #6e6e73;
+    --grey: #f5f5f7;
+    --shot: #eaeaea;  /* matches the product-render backgrounds */
+    --line: rgba(0,0,0,.12);
+    --blue: #0066cc;
+    --shell: 980px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #111;
-      --fg: #eee;
-      --muted: rgba(238, 238, 238, .6);
-      --panel: #1c1c1e;
-      --border: rgba(238, 238, 238, .14);
-      --accent: #eee;
-      --accent-fg: #111;
-    }
-  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
   body {
-    margin: 0; min-height: 100vh;
-    display: grid; place-items: center;
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    background: var(--bg); color: var(--fg);
+    margin: 0;
+    background: #fff;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+                 "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    line-height: 1.47;
+    -webkit-font-smoothing: antialiased;
   }
-  h1 { font-size: 1.5rem; font-weight: 600; margin: 0 0 .5rem; letter-spacing: -.02em; }
-  main { text-align: center; padding: 2rem; }
-  main p { margin: 0; color: var(--muted); font-size: .875rem; }
+  img { max-width: 100%; display: block; }
+  .shell { max-width: var(--shell); margin: 0 auto; padding: 0 22px; }
 
+  /* ---------- nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 20;
+    background: rgba(255,255,255,.82);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--line);
+    font-size: .8125rem;
+  }
+  nav .shell { display: flex; align-items: center; gap: .75rem; height: 44px; }
+  nav .wordmark { font-weight: 600; letter-spacing: -.01em; }
+  nav .badge {
+    font-size: .6875rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--sub); border: 1px solid var(--line); border-radius: 999px; padding: .1rem .5rem;
+  }
+  nav .spacer { flex: 1; }
+  nav a { color: var(--sub); text-decoration: none; }
+  nav a:hover { color: var(--ink); }
+
+  /* ---------- hero ---------- */
+  .hero { text-align: center; padding: 4.5rem 0 0; background: var(--shot); }
+  .eyebrow { color: var(--sub); font-size: 1.0625rem; margin: 0 0 .35rem; }
+  h1 {
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    font-weight: 600; letter-spacing: -.025em; line-height: 1.05;
+    margin: 0 0 .5rem;
+  }
+  .tagline {
+    font-size: clamp(1.375rem, 3.4vw, 2rem);
+    font-weight: 600; letter-spacing: -.015em; margin: 0 0 .25rem;
+  }
+  .kicker { color: var(--sub); font-size: 1.0625rem; margin: 0 0 2.25rem; }
+  .hero figure { margin: 0; }
+  .hero img { margin: 0 auto; max-width: 960px; width: 100%; }
+  .hero-note {
+    max-width: var(--shell); margin: -1.5rem auto 0; padding: 0 22px 4rem;
+    text-align: right; color: var(--sub);
+    font-size: clamp(1.0625rem, 2vw, 1.5rem); line-height: 1.3;
+  }
+
+  /* ---------- spec band ---------- */
+  .specs { background: #000; color: #f5f5f7; padding: 4rem 0; }
+  .specs ul {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5rem 1rem;
+  }
+  .specs li { text-align: center; }
+  .specs .n {
+    display: block; font-size: clamp(1.75rem, 4.5vw, 2.75rem);
+    font-weight: 600; letter-spacing: -.02em; line-height: 1.1;
+  }
+  .specs .l { display: block; margin-top: .35rem; color: #a1a1a6; font-size: .875rem; }
+
+  /* ---------- features ---------- */
+  .features { padding: 5rem 0; background: #fff; }
+  .features h2 {
+    font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 600;
+    letter-spacing: -.02em; text-align: center; margin: 0 0 3rem;
+  }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+  .card {
+    background: var(--shot); border-radius: 18px; padding: 1.5rem 1.25rem 1.5rem;
+    display: flex; flex-direction: column;
+  }
+  .card .shot {
+    height: 190px; display: grid; place-items: center; margin-bottom: 1.5rem;
+  }
+  .card .shot img { max-height: 190px; width: auto; }
+  .card h3 { font-size: 1.0625rem; font-weight: 600; letter-spacing: -.01em; margin: 0 0 .3rem; }
+  .card p { margin: 0; color: var(--sub); font-size: .875rem; }
+
+  /* ---------- fourth fold ---------- */
+  .fourth { background: #000; color: #f5f5f7; text-align: center; padding: 6rem 0; }
+  .fourth h2 {
+    font-size: clamp(2rem, 6vw, 3.5rem); font-weight: 600;
+    letter-spacing: -.025em; margin: 0 0 1rem;
+  }
+  .fourth p {
+    max-width: 34ch; margin: 0 auto; color: #a1a1a6;
+    font-size: clamp(1.0625rem, 2vw, 1.375rem); line-height: 1.4;
+  }
+  .fourth .price { color: #f5f5f7; }
+
+  /* ---------- footnotes + footer ---------- */
+  .fine { background: var(--grey); padding: 3rem 0; }
+  .fine ol { margin: 0; padding-left: 1.1rem; color: var(--sub); font-size: .75rem; line-height: 1.6; }
+  .fine li { margin-bottom: .4rem; }
+
+  footer { background: var(--grey); border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; }
+  .disclaimer {
+    color: var(--sub); font-size: .75rem; line-height: 1.6; margin: 0 0 1rem; max-width: 70ch;
+  }
+  .disclaimer strong { color: var(--ink); }
+  .footer-row { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; align-items: center;
+    font-size: .75rem; color: var(--sub); }
+
+  /* ---------- reveal ---------- */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---------- consent ---------- */
   .consent {
-    position: fixed; inset: auto 0 0 0; z-index: 10;
+    position: fixed; inset: auto 0 0 0; z-index: 30;
     display: flex; flex-wrap: wrap; gap: .75rem 1.25rem;
     align-items: center; justify-content: center;
     padding: 1rem 1.25rem;
-    background: var(--panel);
-    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,.92);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-top: 1px solid var(--line);
   }
   /* Must outrank the .consent display:flex above, or [hidden] has no effect. */
   .consent[hidden] { display: none; }
-  .consent p { margin: 0; font-size: .8125rem; color: var(--muted); max-width: 46ch; }
+  .consent p { margin: 0; font-size: .8125rem; color: var(--sub); max-width: 46ch; }
   .consent-actions { display: flex; gap: .5rem; }
   .consent button {
     font: inherit; font-size: .8125rem; font-weight: 500;
-    padding: .45rem 1rem; border-radius: 999px;
-    border: 1px solid var(--border); cursor: pointer;
-    background: transparent; color: var(--fg);
+    padding: .45rem 1.1rem; border-radius: 999px;
+    border: 1px solid var(--line); cursor: pointer;
+    background: transparent; color: var(--ink);
   }
-  .consent button.primary { background: var(--accent); color: var(--accent-fg); border-color: var(--accent); }
+  .consent button.primary { background: var(--blue); color: #fff; border-color: var(--blue); }
   .consent button:hover { opacity: .85; }
-  .consent button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-
+  .consent button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
   .reset {
-    position: fixed; inset: auto .75rem .75rem auto;
-    font-size: .75rem; color: var(--muted);
-    background: none; border: 0; cursor: pointer; font-family: inherit;
+    position: fixed; inset: auto .75rem .75rem auto; z-index: 30;
+    font: inherit; font-size: .75rem; color: var(--sub);
+    background: none; border: 0; cursor: pointer;
   }
-  .reset:hover { color: var(--fg); }
+  .reset:hover { color: var(--ink); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 860px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+    .specs ul { grid-template-columns: repeat(2, 1fr); }
+    .hero-note { text-align: center; margin-top: 0; }
+  }
+  @media (max-width: 480px) {
+    .grid { grid-template-columns: 1fr; }
+    .card .shot { height: 160px; }
+    .card .shot img { max-height: 160px; }
+  }
 </style>
 </head>
 <body>
-  <main>
-    <h1>iphonetrio.com</h1>
-    <p>Hello world.</p>
-  </main>
 
-  <div class="consent" id="consent-banner" role="dialog" aria-label="Cookie consent" hidden>
-    <p>We use analytics cookies to understand how this site is used. Nothing is collected unless you agree.</p>
-    <div class="consent-actions">
-      <button type="button" id="consent-decline">Decline</button>
-      <button type="button" id="consent-accept" class="primary">Accept</button>
+<nav>
+  <div class="shell">
+    <span class="wordmark">iPhone Trio</span>
+    <span class="badge">Parody</span>
+    <span class="spacer"></span>
+    <a href="#fine">The fine print</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="shell">
+    <p class="eyebrow">Introducing</p>
+    <h1>iPhone Trio</h1>
+    <p class="tagline">Three screens. One iPhone.</p>
+    <p class="kicker">Because two folds was clearly not enough.</p>
+  </div>
+  <figure>
+    <img src="img/trio-open.webp" width="1029" height="789"
+         alt="Concept render of a phone with three display panels unfolded side by side">
+  </figure>
+  <p class="hero-note">More space<br>for more of the same.</p>
+</header>
+
+<section class="specs">
+  <div class="shell">
+    <ul>
+      <li class="reveal"><span class="n">11.4″</span><span class="l">Unfolded display</span></li>
+      <li class="reveal"><span class="n">3</span><span class="l">Hinges to worry about</span></li>
+      <li class="reveal"><span class="n">4.1 mm</span><span class="l">Thin<sup>1</sup></span></li>
+      <li class="reveal"><span class="n">$2,999</span><span class="l">Before the fourth fold<sup>2</sup></span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="features">
+  <div class="shell">
+    <h2 class="reveal">A bigger canvas. And another. And another.</h2>
+    <div class="grid">
+      <article class="card reveal">
+        <div class="shot"><img src="img/folded.webp" alt="The phone folded closed, seen from the back" loading="lazy"></div>
+        <h3>Folded. Still enormous.</h3>
+        <p>Slips into any pocket, provided the pocket is also a bag.</p>
+      </article>
+      <article class="card reveal">
+        <div class="shot"><img src="img/kickstand.webp" alt="The phone standing open with three apps side by side" loading="lazy"></div>
+        <h3>Three screens. Endless tabs.</h3>
+        <p>Work, play, create — and lose track of all three at once.</p>
+      </article>
+      <article class="card reveal">
+        <div class="shot"><img src="img/edge.webp" alt="Edge-on view showing three stacked panels" loading="lazy"></div>
+        <h3>A new kind of fold.</h3>
+        <p>Engineered for strength. Tested by your patience.</p>
+      </article>
+      <article class="card reveal">
+        <div class="shot"><img src="img/apps.webp" alt="The phone unfolded showing several apps at once" loading="lazy"></div>
+        <h3>All your apps. All on screen.</h3>
+        <p>Every app you own, visible at once, each slightly too small to tap.</p>
+      </article>
     </div>
   </div>
+</section>
 
-  <button type="button" class="reset" id="consent-reset" hidden>Cookie settings</button>
+<section class="fourth">
+  <div class="shell">
+    <h2 class="reveal">The fourth fold.</h2>
+    <p class="reveal">
+      Available as a <span class="price">$200</span> configuration option.
+      Folds inward. Serves no purpose. Cannot be removed.
+    </p>
+  </div>
+</section>
 
-  <script>
-    (function () {
-      var banner = document.getElementById('consent-banner');
-      var reset = document.getElementById('consent-reset');
-      var choice = readConsent();
+<section class="fine" id="fine">
+  <div class="shell">
+    <ol>
+      <li>Thinness measured one panel at a time, with the other two panels absent.</li>
+      <li>Fourth fold sold separately. Fifth fold announced next year, folding sideways.</li>
+      <li>All-day battery life, where a day is defined as four hours, screen off, in a drawer.</li>
+      <li>Apple Pencil sold separately. Second Apple Pencil sold separately. Third one comes free with the fourth fold, which is also sold separately.</li>
+      <li>Does not fit in the box. The box is sold separately.</li>
+    </ol>
+  </div>
+</section>
 
-      function showBanner() { banner.hidden = false; reset.hidden = true; }
-      function hideBanner() { banner.hidden = true; reset.hidden = false; }
+<footer>
+  <div class="shell">
+    <p class="disclaimer">
+      <strong>This is a parody.</strong> The iPhone Trio is not a real product and does not exist.
+      This site is not affiliated with, endorsed by, sponsored by, or connected to Apple Inc.
+      in any way. All images are fan-made concept renders of a device that was never made,
+      announced, or seriously considered. Any resemblance to an actual product is the joke.
+    </p>
+    <div class="footer-row">
+      <span>iphonetrio.com</span>
+      <span>Three screens. Still no pocket.</span>
+    </div>
+  </div>
+</footer>
 
-      if (choice) { hideBanner(); } else { showBanner(); }
+<div class="consent" id="consent-banner" role="dialog" aria-label="Cookie consent" hidden>
+  <p>We use analytics cookies to understand how this site is used. Nothing is collected unless you agree.</p>
+  <div class="consent-actions">
+    <button type="button" id="consent-decline">Decline</button>
+    <button type="button" id="consent-accept" class="primary">Accept</button>
+  </div>
+</div>
+<button type="button" class="reset" id="consent-reset" hidden>Cookie settings</button>
 
-      document.getElementById('consent-accept').addEventListener('click', function () {
-        writeConsent('granted');
-        grantConsent();
-        hideBanner();
+<script>
+  (function () {
+    var banner = document.getElementById('consent-banner');
+    var reset = document.getElementById('consent-reset');
+
+    function showBanner() { banner.hidden = false; reset.hidden = true; }
+    function hideBanner() { banner.hidden = true; reset.hidden = false; }
+
+    if (readConsent()) { hideBanner(); } else { showBanner(); }
+
+    document.getElementById('consent-accept').addEventListener('click', function () {
+      writeConsent('granted'); grantConsent(); hideBanner();
+    });
+    document.getElementById('consent-decline').addEventListener('click', function () {
+      writeConsent('denied'); hideBanner();
+    });
+    reset.addEventListener('click', showBanner);
+
+    // scroll reveal
+    var items = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      items.forEach(function (el) { el.classList.add('in'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       });
-
-      document.getElementById('consent-decline').addEventListener('click', function () {
-        writeConsent('denied');
-        hideBanner();
-      });
-
-      reset.addEventListener('click', showBanner);
-    })();
-  </script>
+    }, { rootMargin: '0px 0px -10% 0px', threshold: .1 });
+    items.forEach(function (el) { io.observe(el); });
+  })();
+</script>
 </body>
 </html>
