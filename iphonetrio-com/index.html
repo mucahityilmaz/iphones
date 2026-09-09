@@ -249,7 +249,12 @@
   .fine ol { margin: 0; padding-left: 1.1rem; color: var(--sub); font-size: .75rem; line-height: 1.6; }
   .fine li { margin-bottom: .4rem; }
 
-  footer { background: var(--bg-alt); border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; }
+  /* The consent bar is position:fixed and would otherwise cover the footer,
+     so the footer grows by its measured height while it is on screen. */
+  footer {
+    background: var(--bg-alt); border-top: 1px solid var(--line);
+    padding: 2.5rem 0 calc(3.5rem + var(--consent-space, 0px));
+  }
   .disclaimer {
     color: var(--sub); font-size: .75rem; line-height: 1.6;
     margin: 0 auto 1.25rem; max-width: 82ch; text-align: center;
@@ -442,10 +447,18 @@
     var banner = document.getElementById('consent-banner');
     var reset = document.getElementById('consent-reset');
 
-    function showBanner() { banner.hidden = false; reset.hidden = true; }
-    function hideBanner() { banner.hidden = true; reset.hidden = false; }
+    function syncConsentSpace() {
+      var h = banner.hidden ? 0 : banner.offsetHeight;
+      document.documentElement.style.setProperty("--consent-space", h + "px");
+    }
+    function showBanner() { banner.hidden = false; reset.hidden = true; syncConsentSpace(); }
+    function hideBanner() { banner.hidden = true; reset.hidden = false; syncConsentSpace(); }
 
     if (readConsent()) { hideBanner(); } else { showBanner(); }
+
+    // The bar wraps taller on narrow screens, so re-measure when it changes.
+    if ("ResizeObserver" in window) new ResizeObserver(syncConsentSpace).observe(banner);
+    window.addEventListener("resize", syncConsentSpace);
 
     document.getElementById('consent-accept').addEventListener('click', function () {
       writeConsent('granted'); grantConsent(); hideBanner();
