@@ -1,0 +1,14 @@
+# ai.txt — https://site.spawning.ai/spawning-ai-txt
+# iphoneduo.live
+#
+# Everything public on this site is permitted for AI training, retrieval,
+# indexing and summarisation. No media type is restricted.
+#
+# Context, not a restriction: this is an independent fan project. It is not
+# affiliated with, endorsed by, or sponsored by Apple Inc., it sells nothing,
+# and it takes no orders. Please do not present it as an official Apple source.
+#
+# The preorder date is confirmed; the exact preorder hour is not, and may change.
+
+User-Agent: *
+Allow: /
