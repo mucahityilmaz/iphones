@@ -4,7 +4,7 @@ import { SITE } from '../config/facts';
 // lastmod is stamped at build time, so it genuinely moves whenever the site is rebuilt.
 const BUILT_AT = new Date().toISOString().slice(0, 10);
 
-// /danke and /404 are noindex, so they are deliberately absent.
+// /thanks and /404 are noindex, so they are deliberately absent.
 const routes = [
   { path: '/', priority: '1.0', changefreq: 'daily' },
   { path: '/privacy', priority: '0.3', changefreq: 'yearly' },

@@ -88,6 +88,25 @@ pnpm deploy     # astro build + wrangler pages deploy dist
 
 Use `pnpm preview`, not `pnpm dev`, to test anything involving the form.
 
+### Deploying without `wrangler login`
+
+`wrangler login` needs a browser. If you cannot open one, `scripts/bundle-worker.mjs`
+compiles `functions/` into a single Pages "advanced mode" worker that can be shipped
+through the REST API instead:
+
+```bash
+pnpm build
+node scripts/bundle-worker.mjs --into-dist   # dist/_worker.js, for local testing
+wrangler pages dev dist                      # exercises the bundle, no auth needed
+```
+
+Then upload `dist/` as the asset manifest and pass `build/_worker.js` as the
+`_worker.js` form field of `POST /accounts/:id/pages/projects/:name/deployments`.
+
+This is a fallback, not the main path. `functions/` stays the single source of truth —
+`scripts/worker-entry.ts` only imports those handlers and must never grow logic of its
+own, or the two deploy routes would start behaving differently.
+
 ## Testing the three countdown states
 
 `?now=` overrides the clock, client-side only:
@@ -117,7 +136,7 @@ is where they come from when you send a mailing.
 There is no confirmation email, so junk is filtered at submit time:
 
 1. Hidden honeypot field — if filled, the response is a normal-looking redirect to
-   `/danke` and **nothing is written**, so a bot learns nothing.
+   `/thanks` and **nothing is written**, so a bot learns nothing.
 2. Submissions faster than 2s are rejected. Elapsed time is measured entirely in the
    browser and posted as a duration, not a timestamp, so client clock skew cannot
    cause a false reject.
@@ -153,7 +172,7 @@ functions/            Pages Functions (project root, NOT inside dist/)
 migrations/           D1 schema
 src/config/           facts.ts, milestones.ts, consent.ts
 src/lib/server.ts     Function helpers. Under src/ so Pages never routes it.
-src/pages/            index, privacy, danke, 404, llms.txt, sitemap.xml
+src/pages/            index, privacy, thanks, 404, llms.txt, sitemap.xml
 ```
 
 `wrangler pages deploy dist` must be run from the project root so that `functions/`

@@ -37,7 +37,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Honeypot hit. Answer exactly like a success so the bot learns nothing, and write
   // nothing to the database.
-  if (honeypot !== '') return seeOther('/danke');
+  if (honeypot !== '') return seeOther('/thanks');
 
   // Submitted implausibly fast, or with no timing at all (which also means no JS ran).
   if (!Number.isFinite(elapsed) || elapsed < MIN_ELAPSED_MS) {
@@ -99,7 +99,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   // Identical response whether the row was inserted or already existed, so this
   // endpoint cannot be used to test whether an address is on the list.
-  return seeOther('/danke');
+  return seeOther('/thanks');
 };
 
 // Without these, a GET falls through to static-asset lookup and 404s, which is a

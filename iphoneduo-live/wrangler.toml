@@ -7,13 +7,13 @@ pages_build_output_dir = "dist"
 [[d1_databases]]
 binding = "DB"
 database_name = "iphoneduo_live"
-database_id = "REPLACE_ME_run_pnpm_db_create"
+database_id = "ef0f6c6a-54ca-415a-9b24-ffb7b2901f0b"
 migrations_dir = "migrations"
 
 # Signup rate limiting, 5 per IP per hour. Create with:  pnpm kv:create
 [[kv_namespaces]]
 binding = "RATE_LIMIT"
-id = "REPLACE_ME_run_pnpm_kv_create"
+id = "359873101f6d46e7a9e1e8ed52038d35"
 
 # UNSUBSCRIBE_SECRET and ADMIN_TOKEN are secrets, never committed here.
 #   wrangler pages secret put UNSUBSCRIBE_SECRET --project-name=iphoneduo-live
