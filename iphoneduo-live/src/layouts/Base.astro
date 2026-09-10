@@ -132,6 +132,13 @@ const websiteJsonLd = {
       // Returning visitor who already accepted: restore without asking again.
       if (window.__readConsent() === 'granted') window.__grantConsent();
     </script>
+
+    <!-- Self-hosted Umami. Cookieless and first-party, so it is not gated behind the
+         consent banner the way Google Analytics is. -->
+    <script
+      defer
+      src="https://analytics.yilmaz.games/script.js"
+      data-website-id="dd75787f-72c7-4187-bcc2-8bab5cb31798"></script>
   </head>
 
   <body class="flex min-h-screen flex-col">
@@ -144,9 +151,9 @@ const websiteJsonLd = {
     </a>
 
     <header class="border-b border-line px-5 py-3 sm:px-8">
-      <div class="mx-auto flex max-w-3xl items-start gap-3">
-        <Mark class="mt-0.5 h-5 w-5 shrink-0 text-ink" />
-        <p class="text-[11px] leading-snug text-muted sm:text-xs">{DISCLAIMER}</p>
+      <div class="mx-auto flex max-w-3xl items-center gap-3">
+        <Mark class="h-5 w-5 shrink-0 text-ink" />
+        <span class="text-xs font-medium tracking-tight text-muted">iphoneduo.live</span>
       </div>
     </header>
 

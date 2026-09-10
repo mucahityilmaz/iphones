@@ -18,12 +18,12 @@ export const onRequest: PagesFunction = async ({ next }) => {
       "default-src 'self'",
       // 'unsafe-inline' is required by the pre-paint countdown script, which has to
       // run synchronously and so cannot be an external file.
-      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://analytics.yilmaz.games",
       "style-src 'self' 'unsafe-inline'",
       // GA still falls back to image beacons in some browsers, so it needs img-src too.
       "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://*.analytics.google.com https://*.google-analytics.com",
+      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://*.analytics.google.com https://*.google-analytics.com https://analytics.yilmaz.games",
       "form-action 'self'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
