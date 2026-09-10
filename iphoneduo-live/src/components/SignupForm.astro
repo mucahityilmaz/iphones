@@ -3,10 +3,9 @@ import { CONSENT_TEXT } from '../config/consent';
 ---
 
 <section aria-labelledby="notify-heading" class="space-y-4">
-  <h2 id="notify-heading" class="text-lg font-semibold tracking-tight">Get a reminder</h2>
-  <p class="max-w-prose text-sm text-muted">
-    Optional. Everything on this page works without it, and there is nothing to unlock.
-  </p>
+  <h2 id="notify-heading" class="text-lg font-semibold tracking-tight">
+    Get a reminder <span class="font-normal text-muted">(optional)</span>
+  </h2>
 
   <form method="POST" action="/api/subscribe" class="max-w-xl space-y-4" data-signup novalidate={false}>
     <div class="space-y-2">
