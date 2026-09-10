@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+
+/* Self-hosted, shipped from node_modules at build time. No Google Fonts request. */
+@import '@fontsource-variable/space-grotesk/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+@theme {
+  --color-void: #08080a;
+  --color-raise: #101016;
+  --color-line: #23242f;
+  --color-ink: #f4f4f2;
+  --color-muted: #8d8d9a;
+  /* One accent, used sparingly: countdown digits, focus rings, the single CTA. */
+  --color-volt: #d8ff3e;
+
+  --font-display: 'Space Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, 'SFMono-Regular', monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-void);
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* AA-contrast accent ring, visible on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-volt);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-volt);
+    color: var(--color-void);
+  }
+
+  a {
+    color: inherit;
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@utility sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

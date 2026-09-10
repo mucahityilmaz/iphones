@@ -1,0 +1,27 @@
+---
+/**
+ * Abstract mark: a dial with a swept arc. Deliberately reads as elapsed time,
+ * not as a device — no rounded-rectangle silhouette, no screen, no hinge.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  class={className}
+  viewBox="0 0 40 40"
+  fill="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <circle cx="20" cy="20" r="16" stroke="currentColor" stroke-opacity="0.28" stroke-width="2.5" />
+  <path
+    d="M20 4a16 16 0 0 1 13.86 8"
+    stroke="var(--color-volt)"
+    stroke-width="3.5"
+    stroke-linecap="round"
+  />
+  <circle cx="20" cy="20" r="3" fill="var(--color-volt)" />
+</svg>

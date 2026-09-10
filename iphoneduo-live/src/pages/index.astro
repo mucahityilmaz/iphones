@@ -1,0 +1,91 @@
+---
+import Base from '../layouts/Base.astro';
+import Countdown from '../components/Countdown.astro';
+import SignupForm from '../components/SignupForm.astro';
+import QuickAnswers from '../components/QuickAnswers.astro';
+import {
+  SITE,
+  PRODUCT,
+  specs,
+  quickAnswers,
+  PRICE_MIN,
+  PRICE_MIN_TIER,
+  PRICE_MAX,
+  PRICE_MAX_TIER,
+  INNER_DISPLAY,
+  COLOURS,
+  CASE_PRICE,
+} from '../config/facts';
+import { milestones, ANNOUNCED_AT, formatReferenceDate } from '../config/milestones';
+
+const [preorder, shipping] = milestones;
+
+// Mirrors the visible Quick answers verbatim. Generated from the same array, so the
+// two cannot drift apart — mismatched FAQPage markup is a Google guidelines violation.
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${SITE.url}/#faq`,
+  inLanguage: 'en',
+  mainEntity: quickAnswers.map((qa) => ({
+    '@type': 'Question',
+    name: qa.q,
+    acceptedAnswer: { '@type': 'Answer', text: qa.a },
+  })),
+};
+---
+
+<Base title={SITE.title} description={SITE.description} path="/" showSources={true}>
+  <!-- Above the fold: headline, countdown, signup. Nothing else. -->
+  <section class="px-5 pb-16 pt-10 sm:px-8 sm:pt-16">
+    <div class="mx-auto max-w-3xl space-y-10 sm:space-y-14">
+      <h1 class="text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+        iPhone&nbsp;Duo<br />
+        <span class="text-muted">release countdown</span>
+      </h1>
+
+      <Countdown />
+
+      <SignupForm />
+    </div>
+  </section>
+
+  <!-- Below the fold. Facts only. -->
+  <section aria-labelledby="specs-heading" class="border-t border-line px-5 py-14 sm:px-8">
+    <div class="mx-auto max-w-3xl space-y-8">
+      <h2 id="specs-heading" class="text-2xl font-bold tracking-tight sm:text-3xl">
+        iPhone Duo specifications
+      </h2>
+
+      <p class="max-w-prose text-muted">
+        Apple announced the {PRODUCT} on <time datetime={ANNOUNCED_AT}
+          >{formatReferenceDate(ANNOUNCED_AT)}</time
+        >. iPhone Duo preorders open on <time datetime={preorder!.at}>16 October 2026</time>, and
+        the {PRODUCT} starts shipping on <time datetime={shipping!.at}>23 October 2026</time>. The {
+          PRODUCT
+        } starts at {PRICE_MIN} for {PRICE_MIN_TIER} and goes up to {PRICE_MAX} for {PRICE_MAX_TIER}.
+        The {PRODUCT} has a {INNER_DISPLAY} inner display and comes in {COLOURS[0]} and {COLOURS[1]}.
+        The official {PRODUCT} case costs {CASE_PRICE}.
+      </p>
+
+      <dl class="divide-y divide-line border-t border-line">
+        {
+          specs.map((s) => (
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 py-3">
+              <dt class="text-sm text-muted">{s.label}</dt>
+              <dd class="font-mono text-sm text-ink">{s.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <section class="border-t border-line px-5 py-14 sm:px-8">
+    <div class="mx-auto max-w-3xl">
+      <QuickAnswers />
+    </div>
+  </section>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(faqJsonLd)} />
+</Base>

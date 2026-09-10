@@ -1,0 +1,48 @@
+---
+import { DISCLAIMER, SITE, sources } from '../config/facts';
+
+interface Props {
+  /** The sources line only belongs on the page that makes the factual claims. */
+  showSources?: boolean;
+}
+const { showSources = false } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line px-5 py-10 sm:px-8">
+  <div class="mx-auto max-w-3xl space-y-6">
+    {
+      showSources && (
+        <p class="text-sm text-muted">
+          Sources:{' '}
+          {sources.map((s, i) => (
+            <>
+              <a
+                href={s.href}
+                rel="nofollow noopener"
+                target="_blank"
+                class="underline decoration-line hover:decoration-volt"
+              >
+                {s.label}
+              </a>
+              {i < sources.length - 1 ? ', ' : '.'}
+            </>
+          ))}
+        </p>
+      )
+    }
+
+    <nav aria-label="Footer" class="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+      <a href="/" class="text-muted underline decoration-line hover:text-ink">Countdown</a>
+      <a href="/privacy" class="text-muted underline decoration-line hover:text-ink">Privacy</a>
+      <a
+        href={`mailto:${SITE.contact}`}
+        class="text-muted underline decoration-line hover:text-ink">{SITE.contact}</a
+      >
+    </nav>
+
+    <p class="max-w-prose text-xs leading-relaxed text-muted">{DISCLAIMER}</p>
+
+    <p class="text-xs text-muted">&copy; {year} iphoneduo.live</p>
+  </div>
+</footer>

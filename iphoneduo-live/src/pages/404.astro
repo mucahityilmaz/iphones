@@ -1,0 +1,25 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Page not found — iphoneduo.live"
+  description="That page does not exist."
+  path="/404"
+  noindex={true}
+>
+  <section class="px-5 py-20 sm:px-8">
+    <div class="mx-auto max-w-2xl space-y-6">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">404</p>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">That page does not exist.</h1>
+      <p class="max-w-prose text-muted">The countdown, however, is still running.</p>
+      <p class="pt-4">
+        <a
+          href="/"
+          class="inline-block rounded-lg border border-line px-5 py-3 text-sm font-medium hover:border-volt"
+          >Back to the countdown</a
+        >
+      </p>
+    </div>
+  </section>
+</Base>

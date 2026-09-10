@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+import { SITE, DISCLAIMER } from '../config/facts';
+import Mark from '../components/Mark.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path with a leading slash, e.g. '/' or '/privacy'. Drives the canonical. */
+  path: string;
+  noindex?: boolean;
+  showSources?: boolean;
+}
+
+const { title, description, path, noindex = false, showSources = false } = Astro.props;
+const canonical = new URL(path, SITE.url).href;
+const ogImage = new URL('/og.png', SITE.url).href;
+
+// WebSite node. No Product and no Offer anywhere on this site: nothing here is for
+// sale, and marking up a product we do not sell would misrepresent the page.
+const websiteJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE.url}/#website`,
+  url: `${SITE.url}/`,
+  name: SITE.name,
+  description: SITE.description,
+  inLanguage: 'en',
+  publisher: {
+    '@type': 'Organization',
+    '@id': `${SITE.url}/#publisher`,
+    name: 'iphoneduo.live',
+    url: `${SITE.url}/`,
+    email: SITE.contact,
+    disambiguatingDescription: DISCLAIMER,
+  },
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, follow" />
+      ) : (
+        <meta
+          name="robots"
+          content="index, follow, max-image-preview:large, max-snippet:-1"
+        />
+      )
+    }
+    <meta name="theme-color" content="#08080a" />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iPhone Duo countdown — an unofficial release tracker" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script
+      type="application/ld+json"
+      is:inline
+      set:html={JSON.stringify(websiteJsonLd)}
+    />
+
+    <!-- Cookieless. No consent banner is required, and none is shown. -->
+    <script defer data-domain="iphoneduo.live" src="https://plausible.io/js/script.js"></script>
+  </head>
+
+  <body class="flex min-h-screen flex-col">
+    <a
+      href="#main"
+      class="sr-only-focusable focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:w-auto focus:h-auto focus:m-0 focus:overflow-visible focus:whitespace-normal focus:bg-volt focus:px-4 focus:py-2 focus:text-void"
+      style="clip-path: none;"
+    >
+      Skip to content
+    </a>
+
+    <header class="border-b border-line px-5 py-3 sm:px-8">
+      <div class="mx-auto flex max-w-3xl items-start gap-3">
+        <Mark class="mt-0.5 h-5 w-5 shrink-0 text-ink" />
+        <p class="text-[11px] leading-snug text-muted sm:text-xs">{DISCLAIMER}</p>
+      </div>
+    </header>
+
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+
+    <SiteFooter showSources={showSources} />
+  </body>
+</html>

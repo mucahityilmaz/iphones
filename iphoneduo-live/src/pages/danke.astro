@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import { milestones } from '../config/milestones';
+
+const [preorder] = milestones;
+---
+
+<Base
+  title="You're on the list — iphoneduo.live"
+  description="Signup confirmed."
+  path="/danke"
+  noindex={true}
+>
+  <section class="px-5 py-20 sm:px-8">
+    <div class="mx-auto max-w-2xl space-y-6">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-volt">Done</p>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">You're on the list.</h1>
+      <p class="max-w-prose text-muted">
+        We'll email you once when iPhone Duo preorders open on <time datetime={preorder!.at}
+          >16 October 2026</time
+        >, and occasionally after that. Every email has a one-click unsubscribe link.
+      </p>
+      <p class="max-w-prose text-muted">
+        There is no confirmation email to look for — you are already saved.
+      </p>
+      <p class="pt-4">
+        <a
+          href="/"
+          class="inline-block rounded-lg border border-line px-5 py-3 text-sm font-medium hover:border-volt"
+          >Back to the countdown</a
+        >
+      </p>
+    </div>
+  </section>
+</Base>

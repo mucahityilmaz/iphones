@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/facts';
+import { CONSENT_TEXT } from '../config/consent';
+---
+
+<Base
+  title="Privacy — iphoneduo.live"
+  description="What this site collects: server logs, an optional email list stored on Cloudflare D1, and cookieless analytics."
+  path="/privacy"
+>
+  <article class="px-5 py-14 sm:px-8">
+    <div class="mx-auto max-w-2xl space-y-6">
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Privacy</h1>
+
+      <p class="text-muted">
+        This is a small independent site. It does what is described below and nothing else.
+      </p>
+
+      <h2 class="pt-2 text-lg font-semibold">Who runs it</h2>
+      <p class="text-muted">
+        Write to <a href={`mailto:${SITE.contact}`} class="text-ink underline decoration-line"
+          >{SITE.contact}</a
+        > with any question about this page, or to ask for your data to be deleted.
+      </p>
+
+      <h2 class="pt-2 text-lg font-semibold">Server logs</h2>
+      <p class="text-muted">
+        The site is hosted on Cloudflare, which logs requests — including IP address, user
+        agent and the page requested — as part of serving and protecting the site. Cloudflare
+        holds those logs under its standard retention. We do not build profiles from them.
+      </p>
+
+      <h2 class="pt-2 text-lg font-semibold">The email list</h2>
+      <p class="text-muted">
+        If you enter your address in the signup form, we store it in a Cloudflare D1 database
+        that we control, along with the time you signed up, your IP address and your browser's
+        user agent. The last two exist to spot abuse of the form, since there is no confirmation
+        email to filter it.
+      </p>
+      <p class="text-muted">
+        You are agreeing to this, which is the wording shown next to the checkbox:
+        <span class="mt-2 block border-l-2 border-line pl-4 text-ink">{CONSENT_TEXT}</span>
+      </p>
+      <p class="text-muted">
+        We do not sell, rent or share the list with third parties. Every email we send carries a
+        one-click unsubscribe link, and unsubscribing takes effect immediately.
+      </p>
+
+      <h2 class="pt-2 text-lg font-semibold">Analytics</h2>
+      <p class="text-muted">
+        We use Plausible for visitor counts. It is cookieless, does not collect personal data and
+        does not track anyone across sites. That is why this site shows no cookie banner — it does
+        not set cookies, and it stores nothing personal in your browser.
+      </p>
+
+      <h2 class="pt-2 text-lg font-semibold">Deleting your data</h2>
+      <p class="text-muted">
+        Use the unsubscribe link in any email, or write to <a
+          href={`mailto:${SITE.contact}`}
+          class="text-ink underline decoration-line">{SITE.contact}</a
+        > and we will remove your address from the database.
+      </p>
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,237 @@
+---
+import {
+  milestones,
+  PREORDER_TIME_CONFIRMED,
+  REFERENCE_TZ,
+  formatReference,
+  phaseAt,
+} from '../config/milestones';
+
+const [preorder, shipping] = milestones;
+
+// The build-time phase decides which state ships un-hidden, so crawlers and no-JS
+// visitors get a coherent page. The inline script below re-derives it on load, which
+// is what actually handles rollover between rebuilds.
+const buildPhase = phaseAt(Date.now());
+
+const units = [
+  { key: 'days', label: 'Days' },
+  { key: 'hours', label: 'Hours' },
+  { key: 'minutes', label: 'Minutes' },
+  { key: 'seconds', label: 'Seconds' },
+];
+
+// Serialised for the browser. Absolute epoch ms — no timezone maths on the client.
+const clientMilestones = milestones.map((m) => ({
+  id: m.id,
+  label: m.label,
+  t: Date.parse(m.at),
+}));
+---
+
+<section
+  data-countdown
+  data-phase={buildPhase}
+  aria-labelledby="countdown-heading"
+  class="space-y-6"
+>
+  <h2 id="countdown-heading" class="sr-only">Countdown to the iPhone Duo release</h2>
+
+  <!-- Status line. All three exist in the HTML; only one is ever visible. -->
+  <p class="font-mono text-xs uppercase tracking-[0.2em] text-muted">
+    <span data-show="before-preorder" hidden={buildPhase !== 'before-preorder'}>
+      Preorders open in
+    </span>
+    <span data-show="preorder-open" hidden={buildPhase !== 'preorder-open'}>
+      Preorders are open · Shipping starts in
+    </span>
+    <span data-show="shipped" hidden={buildPhase !== 'shipped'}> The iPhone Duo has shipped </span>
+  </p>
+
+  <!-- Digits. Placeholders are em-dashes at the same tabular width as real numerals,
+       and the script below runs before first paint, so neither the dashes nor a
+       00:00:00 flash is ever visible, and nothing reflows when values land. -->
+  <div
+    data-show="before-preorder preorder-open"
+    hidden={buildPhase === 'shipped'}
+    class="flex flex-wrap items-end gap-x-5 gap-y-4 sm:gap-x-8"
+    aria-hidden="true"
+  >
+    {
+      units.map((u) => (
+        <div class="flex flex-col">
+          <span
+            data-unit={u.key}
+            class="min-w-[2ch] font-mono text-5xl font-bold leading-none tabular-nums text-volt sm:text-7xl"
+            >--</span
+          >
+          <span class="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted sm:text-xs">
+            {u.label}
+          </span>
+        </div>
+      ))
+    }
+  </div>
+
+  <p
+    data-show="shipped"
+    hidden={buildPhase !== 'shipped'}
+    class="max-w-prose text-lg text-ink sm:text-xl"
+  >
+    Both milestones have passed. The iPhone Duo shipped on <time datetime={shipping!.at}
+      >23 October 2026</time
+    >.
+  </p>
+
+  <!-- Screen readers get a coarse summary that changes once a minute instead of a
+       live region ticking every second, which would be unusable. -->
+  <p class="sr-only" role="status" aria-live="polite" data-cd-live></p>
+
+  <!-- Dates: human text plus machine-readable datetime on the same element. The
+       script rewrites only the text, to the visitor's timezone. The attribute stays
+       absolute so crawlers always read the true instant. -->
+  <dl class="grid gap-3 border-t border-line pt-6 text-sm sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+        {preorder!.label}
+      </dt>
+      <dd>
+        <time datetime={preorder!.at} data-localize class="text-ink"
+          >{formatReference(preorder!.at)}</time
+        >
+      </dd>
+    </div>
+    <div class="flex flex-col gap-1">
+      <dt class="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+        {shipping!.label}
+      </dt>
+      <dd>
+        <time datetime={shipping!.at} data-localize class="text-ink"
+          >{formatReference(shipping!.at)}</time
+        >
+      </dd>
+    </div>
+  </dl>
+
+  <p class="text-xs text-muted">
+    Times shown in <span data-tz>{REFERENCE_TZ}</span>.{
+      !PREORDER_TIME_CONFIRMED && (
+        <>
+          {' '}
+          The preorder date is confirmed; the exact hour is not, and is subject to change.
+        </>
+      )
+    }
+  </p>
+</section>
+
+<script is:inline define:vars={{ MS: clientMilestones }}>
+  (function () {
+    var root = document.querySelector('[data-countdown]');
+    if (!root) return;
+
+    // Dev-only state override:  ?now=2026-10-20T12:00:00Z
+    var skew = 0;
+    try {
+      var raw = new URLSearchParams(window.location.search).get('now');
+      if (raw) {
+        var parsed = Date.parse(raw);
+        if (!isNaN(parsed)) skew = parsed - Date.now();
+      }
+    } catch (e) {}
+
+    function now() {
+      return Date.now() + skew;
+    }
+
+    function phaseAt(t) {
+      if (t < MS[0].t) return 'before-preorder';
+      if (t < MS[1].t) return 'preorder-open';
+      return 'shipped';
+    }
+
+    function applyPhase(phase) {
+      root.setAttribute('data-phase', phase);
+      var nodes = root.querySelectorAll('[data-show]');
+      for (var i = 0; i < nodes.length; i++) {
+        var shown = nodes[i].getAttribute('data-show').split(' ');
+        nodes[i].hidden = shown.indexOf(phase) === -1;
+      }
+    }
+
+    var cells = {};
+    ['days', 'hours', 'minutes', 'seconds'].forEach(function (k) {
+      cells[k] = root.querySelector('[data-unit="' + k + '"]');
+    });
+    var live = root.querySelector('[data-cd-live]');
+
+    function pad(n) {
+      return n < 10 ? '0' + n : String(n);
+    }
+
+    var lastLiveMinute = -1;
+
+    function tick() {
+      var t = now();
+      var phase = phaseAt(t);
+      applyPhase(phase);
+
+      if (phase === 'shipped') {
+        if (live && lastLiveMinute !== -2) {
+          live.textContent = 'The iPhone Duo has shipped.';
+          lastLiveMinute = -2;
+        }
+        return;
+      }
+
+      var target = phase === 'before-preorder' ? MS[0] : MS[1];
+      var delta = Math.max(0, target.t - t);
+      var secs = Math.floor(delta / 1000);
+      var d = Math.floor(secs / 86400);
+      var h = Math.floor((secs % 86400) / 3600);
+      var m = Math.floor((secs % 3600) / 60);
+      var s = secs % 60;
+
+      if (cells.days) cells.days.textContent = pad(d);
+      if (cells.hours) cells.hours.textContent = pad(h);
+      if (cells.minutes) cells.minutes.textContent = pad(m);
+      if (cells.seconds) cells.seconds.textContent = pad(s);
+
+      // Announce at most once a minute.
+      if (live && m !== lastLiveMinute) {
+        lastLiveMinute = m;
+        live.textContent =
+          d + ' days, ' + h + ' hours and ' + m + ' minutes until ' + target.label.toLowerCase() + '.';
+      }
+    }
+
+    // Localise the two dates and the timezone label.
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      var tzEl = root.querySelector('[data-tz]');
+      if (tz && tzEl) tzEl.textContent = tz;
+
+      var dateFmt = new Intl.DateTimeFormat('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      });
+      var timeFmt = new Intl.DateTimeFormat('en-GB', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+        timeZoneName: 'short',
+      });
+      var stamps = root.querySelectorAll('time[data-localize]');
+      for (var j = 0; j < stamps.length; j++) {
+        var when = new Date(stamps[j].getAttribute('datetime'));
+        if (!isNaN(when.getTime())) {
+          stamps[j].textContent = dateFmt.format(when) + ' at ' + timeFmt.format(when);
+        }
+      }
+    } catch (e) {}
+
+    tick(); // synchronous, before first paint — no dash flash, no 00:00:00 flash
+    setInterval(tick, 1000);
+  })();
+</script>

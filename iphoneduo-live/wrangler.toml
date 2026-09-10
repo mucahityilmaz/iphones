@@ -1,0 +1,21 @@
+name = "iphoneduo-live"
+compatibility_date = "2026-09-10"
+pages_build_output_dir = "dist"
+
+# Subscriber storage. Create with:  pnpm db:create
+# then paste the printed database_id below.
+[[d1_databases]]
+binding = "DB"
+database_name = "iphoneduo_live"
+database_id = "REPLACE_ME_run_pnpm_db_create"
+migrations_dir = "migrations"
+
+# Signup rate limiting, 5 per IP per hour. Create with:  pnpm kv:create
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "REPLACE_ME_run_pnpm_kv_create"
+
+# UNSUBSCRIBE_SECRET and ADMIN_TOKEN are secrets, never committed here.
+#   wrangler pages secret put UNSUBSCRIBE_SECRET --project-name=iphoneduo-live
+#   wrangler pages secret put ADMIN_TOKEN        --project-name=iphoneduo-live
+# For local dev they come from .dev.vars instead (see .env.example).

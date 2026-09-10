@@ -1,0 +1,18 @@
+---
+import { quickAnswers } from '../config/facts';
+---
+
+<section aria-labelledby="answers-heading" class="space-y-6">
+  <h2 id="answers-heading" class="text-2xl font-bold tracking-tight sm:text-3xl">Quick answers</h2>
+
+  <div class="divide-y divide-line border-t border-line">
+    {
+      quickAnswers.map((qa) => (
+        <div class="py-5" id={qa.id}>
+          <h3 class="text-base font-semibold text-ink">{qa.q}</h3>
+          <p class="mt-2 max-w-prose text-muted">{qa.a}</p>
+        </div>
+      ))
+    }
+  </div>
+</section>

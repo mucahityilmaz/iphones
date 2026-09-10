@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-label="iphoneduo.live">
+  <rect width="40" height="40" rx="9" fill="#08080a"/>
+  <circle cx="20" cy="20" r="12.5" fill="none" stroke="#f4f4f2" stroke-opacity="0.3" stroke-width="2.5"/>
+  <path d="M20 7.5a12.5 12.5 0 0 1 10.83 6.25" fill="none" stroke="#d8ff3e" stroke-width="3.5" stroke-linecap="round"/>
+  <circle cx="20" cy="20" r="2.75" fill="#d8ff3e"/>
+</svg>

@@ -1,0 +1,9 @@
+# iphoneduo.live — independent fan project, not affiliated with Apple Inc.
+# Everything public here is open to crawl, including AI and answer-engine crawlers.
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /unsubscribe
+
+Sitemap: https://iphoneduo.live/sitemap.xml

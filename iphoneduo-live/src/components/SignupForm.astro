@@ -1,0 +1,67 @@
+---
+import { CONSENT_TEXT } from '../config/consent';
+---
+
+<section aria-labelledby="notify-heading" class="space-y-4">
+  <h2 id="notify-heading" class="text-lg font-semibold tracking-tight">Get a reminder</h2>
+  <p class="max-w-prose text-sm text-muted">
+    Optional. Everything on this page works without it, and there is nothing to unlock.
+  </p>
+
+  <form method="POST" action="/api/subscribe" class="max-w-xl space-y-4" data-signup novalidate={false}>
+    <div class="space-y-2">
+      <label for="email" class="block text-sm font-medium">Email address</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        required
+        autocomplete="email"
+        inputmode="email"
+        spellcheck="false"
+        placeholder="you@example.com"
+        class="w-full rounded-lg border border-line bg-raise px-4 py-3 text-base text-ink placeholder:text-muted/60 focus:border-volt focus:outline-none"
+      />
+    </div>
+
+    {/* Honeypot. Off-screen rather than display:none, hidden from AT and the tab order. */}
+    <div class="absolute left-[-9999px] h-0 w-0 overflow-hidden" aria-hidden="true">
+      <label for="website">Leave this field empty</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    {/* Elapsed milliseconds measured entirely in the browser, so server/client clock
+        skew cannot produce a false reject. Filled on submit; empty means no JS ran. */}
+    <input type="hidden" name="elapsed_ms" value="" data-elapsed />
+
+    <label class="flex cursor-pointer items-start gap-3 text-sm leading-relaxed">
+      <input
+        type="checkbox"
+        name="consent"
+        value="yes"
+        required
+        class="mt-1 h-4 w-4 shrink-0 accent-volt"
+      />
+      <span class="text-muted">{CONSENT_TEXT}</span>
+    </label>
+
+    <button
+      type="submit"
+      class="rounded-lg bg-volt px-6 py-3 text-base font-semibold text-void transition-opacity hover:opacity-90"
+    >
+      Notify me
+    </button>
+  </form>
+</section>
+
+<script is:inline>
+  (function () {
+    var form = document.querySelector('form[data-signup]');
+    if (!form) return;
+    var field = form.querySelector('[data-elapsed]');
+    var t0 = Date.now();
+    form.addEventListener('submit', function () {
+      if (field) field.value = String(Date.now() - t0);
+    });
+  })();
+</script>
