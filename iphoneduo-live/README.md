@@ -14,10 +14,13 @@ Independent fan project. Not affiliated with, endorsed by, or sponsored by Apple
 | Signup / unsubscribe / export | Pages Functions in `functions/` |
 | Email storage | Cloudflare D1 |
 | Rate limiting | Cloudflare KV |
-| Analytics | Plausible (cookieless — no consent banner) |
+| Analytics | Google Analytics 4 (`G-K46TYLWDP9`) with basic consent mode |
 | Fonts | Space Grotesk + JetBrains Mono, self-hosted via Fontsource |
 
-No Google Analytics, no Google Fonts, no Meta Pixel, no cookies, no `localStorage`.
+No Google Fonts, no Meta Pixel. Google Analytics runs in **basic consent mode**: everything
+defaults to denied and gtag.js is not fetched at all until the visitor accepts, so declining
+means no Google request is ever made. The only thing stored without asking is the answer to
+the consent banner, in `localStorage`.
 
 ## Where the facts live
 

@@ -9,7 +9,11 @@ const { showSources = false } = Astro.props;
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t border-line px-5 py-10 sm:px-8">
+<!-- Bottom padding grows by the consent bar's measured height while it is on screen,
+     so the fixed bar never covers the footer. -->
+<footer
+  class="border-t border-line px-5 pt-10 pb-[calc(2.5rem+var(--consent-space,0px))] sm:px-8"
+>
   <div class="mx-auto max-w-3xl space-y-6">
     {
       showSources && (

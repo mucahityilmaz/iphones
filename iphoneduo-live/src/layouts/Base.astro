@@ -3,6 +3,8 @@ import '../styles/global.css';
 import { SITE, DISCLAIMER } from '../config/facts';
 import Mark from '../components/Mark.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
+import { GA_ID, CONSENT_KEY } from '../config/analytics';
 
 interface Props {
   title: string;
@@ -82,8 +84,54 @@ const websiteJsonLd = {
       set:html={JSON.stringify(websiteJsonLd)}
     />
 
-    <!-- Cookieless. No consent banner is required, and none is shown. -->
-    <script defer data-domain="iphoneduo.live" src="https://plausible.io/js/script.js"></script>
+    <!-- Google tag (gtag.js) with basic consent mode. Everything defaults to denied
+         and gtag.js is not fetched at all until the visitor accepts. -->
+    <script is:inline define:vars={{ GA_ID, CONSENT_KEY }}>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+
+      gtag('consent', 'default', {
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        ad_storage: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500,
+      });
+      gtag('js', new Date());
+      gtag('config', GA_ID);
+
+      window.__readConsent = function () {
+        try {
+          return localStorage.getItem(CONSENT_KEY);
+        } catch (e) {
+          return null;
+        }
+      };
+      window.__writeConsent = function (value) {
+        try {
+          localStorage.setItem(CONSENT_KEY, value);
+        } catch (e) {}
+      };
+      window.__grantConsent = function () {
+        gtag('consent', 'update', {
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          ad_storage: 'granted',
+          analytics_storage: 'granted',
+        });
+        if (document.getElementById('gtag-js')) return;
+        var s = document.createElement('script');
+        s.id = 'gtag-js';
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+        document.head.appendChild(s);
+      };
+
+      // Returning visitor who already accepted: restore without asking again.
+      if (window.__readConsent() === 'granted') window.__grantConsent();
+    </script>
   </head>
 
   <body class="flex min-h-screen flex-col">
@@ -107,5 +155,6 @@ const websiteJsonLd = {
     </main>
 
     <SiteFooter showSources={showSources} />
+    <ConsentBanner />
   </body>
 </html>

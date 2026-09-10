@@ -1,6 +1,7 @@
 /**
  * Security headers on every response. The CSP allows exactly what the site uses:
- * self-hosted fonts and CSS, the inline countdown/consent scripts, and Plausible.
+ * self-hosted fonts and CSS, the inline countdown/consent scripts, and Google
+ * Analytics — which is only ever fetched after the visitor accepts.
  */
 export const onRequest: PagesFunction = async ({ next }) => {
   const response = await next();
@@ -17,11 +18,12 @@ export const onRequest: PagesFunction = async ({ next }) => {
       "default-src 'self'",
       // 'unsafe-inline' is required by the pre-paint countdown script, which has to
       // run synchronously and so cannot be an external file.
-      "script-src 'self' 'unsafe-inline' https://plausible.io",
+      "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data:",
+      // GA still falls back to image beacons in some browsers, so it needs img-src too.
+      "img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com",
       "font-src 'self'",
-      "connect-src 'self' https://plausible.io",
+      "connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://*.analytics.google.com https://*.google-analytics.com",
       "form-action 'self'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
